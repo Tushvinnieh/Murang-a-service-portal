@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Login - Murang'a County{% endblock %}
+
+{% block content %}
+<div class="auth-container animate-fade-in">
+    <div class="auth-card">
+        <!-- HEADER -->
+        <div class="auth-header">
+            <h2>Welcome Back</h2>
+            <p>Sign in to access your service dashboard</p>
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" action="/login" class="auth-form">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="e.g., citizen@muranga.go.ke">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+
+            <button type="submit" class="btn-emerald-full">
+                Sign In <i class="fas fa-arrow-right"></i>
+            </button>
+        </form>
+
+        <!-- FOOTER LINKS -->
+        <div class="auth-footer">
+            <p>Don't have an account? <a href="/register">Create Account</a></p>
+            <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* AUTH PAGE STYLES */
+    .auth-container {
+        display: flex; justify-content: center; align-items: center;
+        min-height: calc(100vh - 200px); padding: 2rem;
+    }
+    .auth-card {
+        background: white; width: 100%; max-width: 450px;
+        padding: 3rem; border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        border: 1px solid #e2e8f0;
+    }
+    .auth-header { text-align: center; margin-bottom: 2rem; }
+    .auth-header h2 { color: #064e3b; font-size: 1.75rem; margin-bottom: 0.5rem; }
+    .auth-header p { color: #64748b; font-size: 0.95rem; }
+
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label {
+        display: block; margin-bottom: 0.5rem; font-size: 0.75rem;
+        font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .form-group input {
+        width: 100%; padding: 0.875rem 1rem; border: 1px solid #cbd5e1;
+        border-radius: 8px; font-size: 1rem; transition: all 0.2s;
+        background: #f8fafc;
+    }
+    .form-group input:focus {
+        outline: none; border-color: #064e3b; background: white;
+        box-shadow: 0 0 0 3px rgba(6,78,59,0.1);
+    }
+
+    .btn-emerald-full {
+        width: 100%; background: #064e3b; color: white; padding: 1rem;
+        border: none; border-radius: 8px; font-weight: 600; font-size: 1rem;
+        cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px;
+    }
+    .btn-emerald-full:hover { background: #047857; transform: translateY(-2px); }
+
+    .auth-footer {
+        margin-top: 2rem; text-align: center; font-size: 0.9rem; color: #64748b;
+        border-top: 1px solid #f1f5f9; padding-top: 1.5rem;
+    }
+    .auth-footer a { color: #064e3b; font-weight: 600; text-decoration: none; }
+    .auth-footer a:hover { text-decoration: underline; }
+    .back-link { display: inline-block; margin-top: 1rem; font-size: 0.85rem; color: #94a3b8 !important; }
+    
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+</style>
+{% endblock %}

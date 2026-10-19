@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard - Murang'a County{% endblock %}
+
+{% block content %}
+<!-- HIDE GLOBAL NAVBAR FOR DASHBOARD VIEW -->
+<style>
+    .gov-navbar { display: none !important; }
+    body { background-color: #f8fafc; } /* Force Cool Light Gray */
+</style>
+
+<div class="dashboard-layout">
+    <!-- VERTICAL SIDEBAR (EMERALD THEME) -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="height:35px;">
+            <span>Citizen Portal</span>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="/dashboard" class="nav-item active">
+                <i class="fas fa-th-large"></i> Dashboard
+            </a>
+            <a href="/submit" class="nav-item">
+                <i class="fas fa-plus-circle"></i> New Request
+            </a>
+            <a href="/profile" class="nav-item">
+                <i class="fas fa-user-cog"></i> My Profile
+            </a>
+            <a href="/logout" class="nav-item logout-link">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <p>&copy; 2026 Murang'a County</p>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-area">
+        <!-- UTILITY HEADER (NO PERSONAL GREETING) -->
+        <header class="top-header">
+            <div>
+                <h1 class="page-title">Service Requests</h1>
+                <p class="page-subtitle">Manage applications and track county service status.</p>
+            </div>
+            <a href="/submit" class="btn-emerald">
+                <i class="fas fa-plus"></i> New Request
+            </a>
+        </header>
+
+        <!-- STATS CARDS (AMBER/BLUE/GREEN ACCENTS) -->
+        <div class="stats-grid">
+            <div class="stat-card border-amber">
+                <div class="stat-icon amber-bg"><i class="fas fa-clock"></i></div>
+                <div class="stat-info">
+                    <span class="stat-num">{{ requests|selectattr('status','equalto','Pending')|list|length }}</span>
+                    <span class="stat-label">Pending Review</span>
+                </div>
+            </div>
+            <div class="stat-card border-blue">
+                <div class="stat-icon blue-bg"><i class="fas fa-spinner"></i></div>
+                <div class="stat-info">
+                    <span class="stat-num">{{ requests|selectattr('status','equalto','In Progress')|list|length }}</span>
+                    <span class="stat-label">In Progress</span>
+                </div>
+            </div>
+            <div class="stat-card border-emerald">
+                <div class="stat-icon emerald-bg"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-info">
+                    <span class="stat-num">{{ requests|selectattr('status','equalto','Resolved')|list|length }}</span>
+                    <span class="stat-label">Completed</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- APPLICATIONS SECTION -->
+        <section class="content-section">
+            <h2 class="section-title">Active Applications</h2>
+            
+            {% if requests %}
+                <div class="requests-grid">
+                    {% for req in requests %}
+                    <div class="request-card">
+                        <div class="card-top">
+                            <span class="category-pill">{{ req.category }}</span>
+                            <span class="status-badge status-{{ req.status|lower|replace(' ', '-') }}">
+                                {{ req.status }}
+                            </span>
+                        </div>
+                        <div class="card-content">
+                            <h3>{{ req.location }}</h3>
+                            <p>{{ req.description[:90] }}{% if req.description|length > 90 %}...{% endif %}</p>
+                            <div class="card-footer">
+                                <span class="date"><i class="far fa-calendar"></i> {{ req.created_at.strftime('%b %d, %Y') }}</span>
+                                <a href="/request/{{ req.id }}" class="view-btn">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <h3>No Active Requests</h3>
+                    <p>You haven't submitted any service requests. Start by reporting an issue in your area.</p>
+                    <a href="/submit" class="btn-emerald mt-4">Submit First Request</a>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+</div>
+
+<!-- SCOPED DASHBOARD STYLES (GROWTH & HERITAGE THEME) -->
+<style>
+    /* LAYOUT RESET */
+    .dashboard-layout { display: flex; min-height: 100vh; font-family: 'Inter', sans-serif; }
+    
+    /* SIDEBAR */
+    .sidebar {
+        width: 260px; background: white; border-right: 1px solid #e2e8f0;
+        display: flex; flex-direction: column; padding: 2rem 1.5rem;
+        position: fixed; height: 100vh; z-index: 50;
+    }
+    .sidebar-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.25rem; color: #064e3b; margin-bottom: 3rem; }
+    .sidebar-nav { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+    .nav-item {
+        display: flex; align-items: center; gap: 12px; padding: 0.875rem 1rem;
+        border-radius: 8px; text-decoration: none; color: #64748b; font-weight: 500;
+        transition: all 0.2s ease;
+    }
+    .nav-item:hover, .nav-item.active { background: #ecfdf5; color: #064e3b; }
+    .nav-item i { width: 20px; text-align: center; }
+    .logout-link { color: #ef4444; margin-top: auto; }
+    .logout-link:hover { background: #fef2f2; color: #dc2626; }
+    .sidebar-footer { font-size: 0.75rem; color: #94a3b8; text-align: center; margin-top: 2rem; }
+    
+    /* MAIN AREA */
+    .main-area { margin-left: 260px; flex: 1; padding: 2.5rem; background: #f8fafc; }
+    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+    .page-title { font-size: 1.875rem; font-weight: 800; color: #064e3b; margin: 0; } /* Deep Emerald Heading */
+    .page-subtitle { color: #64748b; margin: 0.5rem 0 0; font-size: 1rem; }
+    
+    /* BUTTONS */
+    .btn-emerald {
+        background: #064e3b; color: white; padding: 0.75rem 1.5rem; border-radius: 999px;
+        text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;
+        transition: 0.3s; box-shadow: 0 4px 15px rgba(6,78,59,0.2);
+    }
+    .btn-emerald:hover { background: #047857; transform: translateY(-2px); }
+    
+    /* STATS */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+    .stat-card {
+        background: white; padding: 1.5rem; border-radius: 12px; display: flex; align-items: center; gap: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; transition: 0.3s;
+    }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+    
+    /* Status Borders */
+    .border-amber { border-left: 4px solid #f59e0b; }
+    .border-blue { border-left: 4px solid #3b82f6; }
+    .border-emerald { border-left: 4px solid #064e3b; }
+    
+    .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+    .amber-bg { background: #fef3c7; color: #d97706; }
+    .blue-bg { background: #dbeafe; color: #2563eb; }
+    .emerald-bg { background: #ecfdf5; color: #064e3b; }
+    
+    .stat-num { font-size: 1.75rem; font-weight: 800; display: block; line-height: 1; color: #0f172a; }
+    .stat-label { font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    /* REQUESTS GRID */
+    .section-title { font-size: 1.25rem; font-weight: 700; color: #064e3b; margin-bottom: 1.5rem; }
+    .requests-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+    .request-card {
+        background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0;
+        transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .request-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-color: #064e3b; }
+    .card-top { padding: 1rem 1.5rem; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+    .category-pill { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    /* STATUS BADGES */
+    .status-badge { padding: 4px 10px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; }
+    .status-pending { background: #fef3c7; color: #92400e; } /* Amber */
+    .status-in-progress { background: #dbeafe; color: #1e40af; } /* Blue */
+    .status-resolved { background: #ecfdf5; color: #065f46; } /* Emerald */
+    
+    .card-content { padding: 1.5rem; }
+    .card-content h3 { margin: 0 0 0.5rem; font-size: 1.05rem; color: #334155; }
+    .card-content p { margin: 0 0 1.25rem; color: #64748b; font-size: 0.9rem; line-height: 1.5; }
+    .card-footer { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #94a3b8; }
+    .view-btn { color: #064e3b; text-decoration: none; font-weight: 600; }
+    
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 5rem 2rem; background: white; border-radius: 12px; border: 2px dashed #e2e8f0; }
+    .empty-icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.8; }
+    
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+        .sidebar { width: 80px; padding: 1.5rem 0.5rem; align-items: center; }
+        .sidebar-brand span, .nav-item span, .sidebar-footer { display: none; }
+        .nav-item { justify-content: center; padding: 1rem; }
+        .main-area { margin-left: 80px; padding: 1.5rem; }
+    }
+    @media (max-width: 768px) {
+        .sidebar { display: none; }
+        .main-area { margin-left: 0; }
+        .top-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        .stats-grid { grid-template-columns: 1fr; }
+    }
+
+
+     @media (max-width: 1024px) {
+        .sidebar { 
+            width: 80px; padding: 1.5rem 0.5rem; align-items: center; 
+        }
+        /* HIDE TEXT ELEMENTS */
+        .sidebar-brand span, 
+        .nav-item span, 
+        .sidebar-footer { 
+            display: none !important; 
+        }
+        /* CENTER ICONS */
+        .nav-item { 
+            justify-content: center; padding: 1rem; width: 100%; 
+        }
+        .nav-item i { margin: 0; font-size: 1.25rem; }
+        .main-area { margin-left: 80px; }
+    }
+
+    @media (max-width: 768px) {
+        /* MOBILE: HIDE SIDEBAR ENTIRELY & ADD BOTTOM NAV OR HAMBURGER */
+        .sidebar { display: none; }
+        .main-area { margin-left: 0; padding: 1rem; }
+        
+        /* OPTIONAL: ADD MOBILE BOTTOM BAR FOR EASY ACCESS */
+        .mobile-nav {
+            display: flex; position: fixed; bottom: 0; left: 0; width: 100%;
+            background: white; border-top: 1px solid #e2e8f0; z-index: 100;
+            justify-content: space-around; padding: 0.75rem 0;
+        }
+        .mobile-nav a { 
+            color: #64748b; text-decoration: none; display: flex; flex-direction: column; 
+            align-items: center; font-size: 0.7rem; gap: 4px; 
+        }
+        .mobile-nav a.active { color: #064e3b; }
+        .mobile-nav i { font-size: 1.25rem; }
+    }
+</style>
+
+<div class="mobile-nav">
+    <a href="/dashboard" class="active"><i class="fas fa-home"></i> Home</a>
+    <a href="/submit"><i class="fas fa-plus-circle"></i> New</a>
+    <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Exit</a>
+</div>
+{% endblock %}

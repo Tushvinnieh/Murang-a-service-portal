@@ -1,0 +1,167 @@
+/* =========================================
+   GROWTH & HERITAGE THEME SYSTEM
+   ========================================= */
+:root {
+    /* PRIMARY PALETTE */
+    --emerald-900: #064e3b;  /* Deep Emerald (Headers/Structure) */
+    --emerald-700: #047857;  /* Primary Buttons/Links */
+    --emerald-50: #ecfdf5;   /* Subtle backgrounds */
+    
+    /* ACCENT PALETTE */
+    --amber-500: #f59e0b;    /* Pending/Urgent */
+    --amber-100: #fef3c7;    /* Pending Background */
+    --amber-800: #92400e;    /* Pending Text */
+    
+    /* STATUS COLORS */
+    --blue-100: #dbeafe;     /* In Progress BG */
+    --blue-800: #1e40af;     /* In Progress Text */
+    --green-100: #d1fae5;    /* Resolved BG */
+    --green-800: #065f46;    /* Resolved Text */
+    
+    /* NEUTRALS */
+    --bg-body: #f8fafc;      /* Cool Light Gray */
+    --surface-white: #ffffff;
+    --border-subtle: #e2e8f0;
+    --text-slate: #334155;   /* Body Text */
+    --text-muted: #64748b;   /* Labels */
+    
+    /* SHADOWS & RADIUS */
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+    --shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.08);
+    --radius-md: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-slate);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* TYPOGRAPHY */
+h1, h2, h3, h4 { color: var(--emerald-900); font-weight: 700; letter-spacing: -0.025em; }
+p { color: var(--text-slate); }
+label { color: var(--text-muted); font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* AUTHORITATIVE TOP NAVBAR */
+.gov-navbar {
+    background-color: var(--emerald-900);
+    width: 100%;
+    padding: 0 2rem;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 1.25rem;
+}
+
+.nav-brand img { height: 36px; width: auto; }
+
+.nav-actions { display: flex; align-items: center; gap: 1rem; }
+
+/* Ghost Logout Button */
+.btn-ghost {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: white; }
+
+/* SURFACES & CARDS */
+.card {
+    background: var(--surface-white);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+
+/* FORMS */
+input, select, textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    background: white;
+    color: var(--text-slate);
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--emerald-700);
+    box-shadow: 0 0 0 3px var(--emerald-50);
+}
+
+/* BUTTONS */
+.btn-primary {
+    background: var(--emerald-700);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-primary:hover { background: var(--emerald-900); }
+
+/* STATUS BADGES */
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.badge-pending { background: var(--amber-100); color: var(--amber-800); }
+.badge-progress { background: var(--blue-100); color: var(--blue-800); }
+.badge-resolved { background: var(--green-100); color: var(--green-800); }
+
+/* TABLES */
+table { width: 100%; border-collapse: collapse; background: white; border-radius: var(--radius-md); overflow: hidden; }
+th { background: var(--emerald-50); color: var(--emerald-900); text-align: left; padding: 1rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border-subtle); }
+td { padding: 1rem; border-bottom: 1px solid var(--border-subtle); color: var(--text-slate); }
+tr:nth-child(even) { background-color: #f8fafc; } /* Zebra Striping */
+tr:hover td { background-color: var(--emerald-50); }
+
+/* ACCESSIBILITY FOCUS RING */
+*:focus-visible { outline: 2px solid var(--amber-500); outline-offset: 2px; }
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 768px) {
+    .gov-navbar { padding: 0 1rem; }
+    .nav-brand span { display: none; } /* Hide text on small screens, keep logo */
+    .btn-ghost span { display: none; } /* Icon only on mobile */
+}

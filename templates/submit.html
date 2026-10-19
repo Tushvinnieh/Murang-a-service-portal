@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Submit Request - Murang'a County{% endblock %}
+
+{% block content %}
+<div class="auth-container animate-fade-in">
+    <div class="auth-card" style="max-width: 600px;">
+        <!-- HEADER -->
+        <div class="auth-header">
+            <h2>Submit Service Request</h2>
+            <p>Report an issue to help us serve you better</p>
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" action="/submit" enctype="multipart/form-data" class="auth-form">
+            
+            <!-- CATEGORY -->
+            <div class="form-group">
+                <label for="category">Category *</label>
+                <select id="category" name="category" required class="styled-select">
+                    <option value="" disabled selected>Select a category</option>
+                    <option value="Streetlight">Broken Streetlight</option>
+                    <option value="Water">Water Issue / Leak</option>
+                    <option value="Garbage">Garbage Collection</option>
+                    <option value="Roads">Road Repair / Pothole</option>
+                    <option value="Other">Other Infrastructure</option>
+                </select>
+                <p class="helper-text"><i class="fas fa-robot"></i> AI will auto-suggest based on description</p>
+            </div>
+
+            <!-- LOCATION -->
+            <div class="form-group">
+                <label for="location">Location *</label>
+                <input type="text" id="location" name="location" required placeholder="e.g., Kangema Market, Near Library">
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="form-group">
+                <label for="description">Description *</label>
+                <textarea id="description" name="description" rows="4" required placeholder="Describe the issue in detail..." 
+                          style="width: 100%; padding: 0.875rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; background: #f8fafc; resize: vertical; font-family: inherit;"></textarea>
+            </div>
+
+            <!-- IMAGE UPLOAD (CUSTOM STYLED) -->
+            <div class="form-group">
+                <label>Upload Image (Optional)</label>
+                <div class="file-upload-box">
+                    <input type="file" id="image" name="image" accept="image/*" onchange="updateFileName(this)">
+                    <div class="file-upload-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span id="file-name">Click to upload photo evidence</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBMIT BUTTON -->
+            <button type="submit" class="btn-emerald-full">
+                Submit Request <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+
+        <!-- FOOTER LINK -->
+        <div class="auth-footer" style="border-top: none; padding-top: 1rem; margin-top: 1rem;">
+            <a href="/dashboard" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<!-- STYLES & SCRIPTS -->
+<style>
+    /* REUSE AUTH STYLES FROM LOGIN/REGISTER */
+    .auth-container {
+        display: flex; justify-content: center; align-items: center;
+        min-height: calc(100vh - 250px); padding: 2rem;
+    }
+    .auth-card {
+        background: white; width: 100%; max-width: 600px;
+        padding: 3rem; border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        border: 1px solid #e2e8f0;
+    }
+    .auth-header { text-align: center; margin-bottom: 2rem; }
+    .auth-header h2 { color: #064e3b; font-size: 1.75rem; margin-bottom: 0.5rem; font-weight: 800; }
+    .auth-header p { color: #64748b; font-size: 0.95rem; }
+
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label {
+        display: block; margin-bottom: 0.5rem; font-size: 0.75rem;
+        font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .helper-text { font-size: 0.8rem; color: #64748b; margin-top: 0.5rem; display: flex; align-items: center; gap: 6px; }
+    .helper-text i { color: #7c3aed; } /* Purple for AI icon */
+
+    /* INPUTS & SELECTS */
+    .styled-select, textarea {
+        width: 100%; padding: 0.875rem 1rem; border: 1px solid #cbd5e1;
+        border-radius: 8px; font-size: 1rem; transition: all 0.2s;
+        background: #f8fafc; color: #334155; font-family: inherit;
+    }
+    .styled-select:focus, textarea:focus {
+        outline: none; border-color: #064e3b; background: white;
+        box-shadow: 0 0 0 3px rgba(6,78,59,0.1);
+    }
+
+    /* CUSTOM FILE UPLOAD BOX */
+    .file-upload-box {
+        border: 2px dashed #cbd5e1; border-radius: 8px; padding: 2rem;
+        text-align: center; cursor: pointer; transition: 0.2s; background: #f8fafc;
+    }
+    .file-upload-box:hover { border-color: #064e3b; background: #ecfdf5; }
+    .file-upload-box input[type="file"] { display: none; } /* Hide default input */
+    .file-upload-label { display: flex; flex-direction: column; align-items: center; gap: 8px; color: #64748b; font-weight: 500; }
+    .file-upload-label i { font-size: 2rem; color: #064e3b; }
+
+    /* BUTTON */
+    .btn-emerald-full {
+        width: 100%; background: #064e3b; color: white; padding: 1rem;
+        border: none; border-radius: 8px; font-weight: 600; font-size: 1rem;
+        cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px;
+        margin-top: 1rem;
+    }
+    .btn-emerald-full:hover { background: #047857; transform: translateY(-2px); }
+
+    .back-link { color: #94a3b8 !important; text-decoration: none; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; }
+    .back-link:hover { color: #064e3b !important; }
+    
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+</style>
+
+<script>
+    // Simple script to update the file name when a user selects a file
+    function updateFileName(input) {
+        const fileNameSpan = document.getElementById('file-name');
+        if (input.files && input.files.length > 0) {
+            fileNameSpan.textContent = input.files[0].name;
+            fileNameSpan.style.color = '#064e3b';
+            fileNameSpan.style.fontWeight = '600';
+        } else {
+            fileNameSpan.textContent = 'Click to upload photo evidence';
+            fileNameSpan.style.color = '#64748b';
+            fileNameSpan.style.fontWeight = '500';
+        }
+    }
+</script>
+{% endblock %}

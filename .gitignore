@@ -1,1 +1,8 @@
-".env\n__pycache__\n*.db" 
+venv/
+__pycache__/
+*.db
+instance/
+uploads/
+.env
+*.pyc
+.DS_Store

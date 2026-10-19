@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Home - Murang'a County{% endblock %}
+
+{% block content %}
+<!-- HERO SECTION WITH ANIMATION -->
+<section class="hero-section animate-fade-in">
+    <div class="hero-content">
+        <h1>Serving Murang'a Digitally</h1>
+        <p>Report infrastructure issues, track service requests, and connect directly with county administration through our secure digital platform.</p>
+        
+        {% if not current_user %}
+            <a href="/register" class="btn-hero">Access Portal <i class="fas fa-arrow-right"></i></a>
+        {% else %}
+            <a href="/dashboard" class="btn-hero">Go to Dashboard <i class="fas fa-arrow-right"></i></a>
+        {% endif %}
+
+        <!-- TRUST SIGNALS -->
+        <div class="trust-bar animate-slide-up-delay">
+            <div><i class="fas fa-clock"></i> Avg. Response: 4hrs</div>
+            <div><i class="fas fa-check-circle"></i> 98% Resolution Rate</div>
+            <div><i class="fas fa-shield-alt"></i> Secure & Verified</div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURE CARDS (AI CARD REMOVED) -->
+<section class="features-grid animate-slide-up">
+    <!-- CARD 1: SUBMIT -->
+    <div class="feature-card">
+        <div class="icon-box emerald"><i class="fas fa-pen-to-square"></i></div>
+        <h3>Submit Requests</h3>
+        <p>Report broken streetlights, water issues, or garbage collection problems with photo evidence.</p>
+    </div>
+
+    <!-- CARD 2: TRACK -->
+    <div class="feature-card">
+        <div class="icon-box blue"><i class="fas fa-chart-line"></i></div>
+        <h3>Track Status</h3>
+        <p>Monitor your request in real-time from Pending → In Progress → Resolved with instant updates.</p>
+    </div>
+</section>
+
+<style>
+    /* ANIMATIONS */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
+    .animate-slide-up { animation: slideUp 0.8s ease-out 0.2s forwards; opacity: 0; }
+    .animate-slide-up-delay { animation: slideUp 0.8s ease-out 0.4s forwards; opacity: 0; }
+
+    /* HERO STYLING */
+    .hero-section { 
+        background: var(--emerald-900); padding: 6rem 2rem; text-align: center; color: white; 
+    }
+    .hero-content h1 { color: white; font-size: 3rem; margin-bottom: 1.5rem; }
+    .hero-content p { color: rgba(255,255,255,0.9); font-size: 1.2rem; max-width: 600px; margin: 0 auto 2.5rem; }
+    
+    .btn-hero { 
+        background: white; color: var(--emerald-900); padding: 1rem 2.5rem; border-radius: 999px; 
+        font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+        transition: transform 0.2s;
+    }
+    .btn-hero:hover { transform: scale(1.05); }
+
+    .trust-bar { 
+        margin-top: 3rem; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; 
+        color: rgba(255,255,255,0.8); font-size: 0.9rem; 
+    }
+    .trust-bar i { color: #f59e0b; margin-right: 6px; }
+
+    /* FEATURES GRID */
+    .features-grid { 
+        max-width: 900px; margin: -4rem auto 0; padding: 0 2rem; 
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; 
+    }
+    .feature-card { 
+        background: white; padding: 2.5rem; border-radius: 12px; text-align: center; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+        transition: transform 0.3s;
+    }
+    .feature-card:hover { transform: translateY(-5px); }
+    
+    .icon-box { 
+        width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; 
+        justify-content: center; margin: 0 auto 1.5rem; font-size: 1.5rem; 
+    }
+    .emerald { background: #ecfdf5; color: #064e3b; }
+    .blue { background: #eff6ff; color: #1e40af; }
+</style>
+{% endblock %}

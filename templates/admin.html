@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - Murang'a County{% endblock %}
+
+{% block content %}
+<!-- HIDE GLOBAL NAVBAR FOR ADMIN VIEW -->
+<style>
+    .gov-navbar { display: none !important; }
+    body { background-color: #f8fafc; }
+</style>
+
+<div class="admin-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="height:35px;">
+            <span>Admin Portal</span>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="/admin" class="nav-item active">
+                <i class="fas fa-th-large"></i> Dashboard
+            </a>
+            <a href="/admin/export-csv" class="nav-item">
+                <i class="fas fa-file-export"></i> Export Data
+            </a>
+            <a href="/logout" class="nav-item logout-link">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <p>&copy; 2026 Murang'a County</p>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-area">
+        <!-- HEADER -->
+        <header class="top-header">
+            <div>
+                <h1 class="page-title">Admin Dashboard</h1>
+                <p class="page-subtitle">Manage and resolve citizen service requests.</p>
+            </div>
+            <div class="admin-badge">
+                <i class="fas fa-shield-alt"></i> Administrator Access
+            </div>
+        </header>
+
+        <!-- STATS CARDS -->
+        <div class="stats-grid">
+            <div class="stat-card border-amber">
+                <div class="stat-icon amber-bg"><i class="fas fa-clock"></i></div>
+                <div class="stat-info">
+                    <span class="stat-num">{{ stats.pending }}</span>
+                    <span class="stat-label">Pending</span>
+                </div>
+            </div>
+            <div class="stat-card border-blue">
+                <div class="stat-icon blue-bg"><i class="fas fa-spinner"></i></div>
+                <div class="stat-info">
+                    <span class="stat-num">{{ stats.in_progress }}</span>
+                    <span class="stat-label">In Progress</span>
+                </div>
+            </div>
+            <div class="stat-card border-emerald">
+                <div class="stat-icon emerald-bg"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-info">
+                    <span class="stat-num">{{ stats.resolved }}</span>
+                    <span class="stat-label">Resolved</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATA TABLE SECTION -->
+        <section class="table-section">
+            <div class="table-header">
+                <h2 class="section-title">Service Requests</h2>
+                
+                <!-- SEARCH & FILTER -->
+                <div class="table-controls">
+                    <form method="GET" action="/admin" style="display:flex; gap:10px;">
+                        <input type="text" name="search" placeholder="Search location or description..." 
+                               value="{{ search }}" style="width:300px; padding:0.5rem 1rem; border-radius:8px; border:1px solid #cbd5e1;">
+                        
+                        <select name="status_filter" style="padding:0.5rem 1rem; border-radius:8px; border:1px solid #cbd5e1; background:white;">
+                            <option value="">All Statuses</option>
+                            <option value="Pending" {% if status_filter == 'Pending' %}selected{% endif %}>Pending</option>
+                            <option value="In Progress" {% if status_filter == 'In Progress' %}selected{% endif %}>In Progress</option>
+                            <option value="Resolved" {% if status_filter == 'Resolved' %}selected{% endif %}>Resolved</option>
+                        </select>
+                        
+                        <button type="submit" class="btn-emerald-sm">Filter</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Citizen</th>
+                            <th>Category</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for req in requests %}
+                        <tr>
+                            <td>#{{ req.id }}</td>
+                            <td>{{ req.user.name }}</td>
+                            <td>{{ req.category }}</td>
+                            <td>{{ req.location }}</td>
+                            <td>
+                                <span class="status-badge status-{{ req.status|lower|replace(' ', '-') }}">
+                                    {{ req.status }}
+                                </span>
+                            </td>
+                            <td>{{ req.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                <form method="POST" action="/admin/update-status/{{ req.id }}" style="display:inline;">
+                                    <select name="status" onchange="this.form.submit()" class="status-select">
+                                        <option value="Pending" {% if req.status=='Pending' %}selected{% endif %}>Pending</option>
+                                        <option value="In Progress" {% if req.status=='In Progress' %}selected{% endif %}>In Progress</option>
+                                        <option value="Resolved" {% if req.status=='Resolved' %}selected{% endif %}>Resolved</option>
+                                    </select>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" style="text-align:center; padding:3rem; color:#64748b;">
+                                No requests found matching your criteria.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- ADMIN STYLES -->
+<style>
+    /* LAYOUT */
+    .admin-layout { display: flex; min-height: 100vh; font-family: 'Inter', sans-serif; }
+    
+    /* SIDEBAR */
+    .sidebar {
+        width: 260px; background: white; border-right: 1px solid #e2e8f0;
+        display: flex; flex-direction: column; padding: 2rem 1.5rem;
+        position: fixed; height: 100vh; z-index: 50;
+    }
+    .sidebar-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.25rem; color: #064e3b; margin-bottom: 3rem; }
+    .sidebar-nav { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+    .nav-item {
+        display: flex; align-items: center; gap: 12px; padding: 0.875rem 1rem;
+        border-radius: 8px; text-decoration: none; color: #64748b; font-weight: 500; transition: all 0.2s;
+    }
+    .nav-item:hover, .nav-item.active { background: #ecfdf5; color: #064e3b; }
+    .nav-item i { width: 20px; text-align: center; }
+    .logout-link { color: #ef4444; margin-top: auto; }
+    .logout-link:hover { background: #fef2f2; color: #dc2626; }
+    .sidebar-footer { font-size: 0.75rem; color: #94a3b8; text-align: center; margin-top: 2rem; }
+    
+    /* MAIN AREA */
+    .main-area { margin-left: 260px; flex: 1; padding: 2.5rem; background: #f8fafc; }
+    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+    .page-title { font-size: 1.875rem; font-weight: 800; color: #064e3b; margin: 0; }
+    .page-subtitle { color: #64748b; margin: 0.5rem 0 0; }
+    .admin-badge { 
+        background: #064e3b; color: white; padding: 0.5rem 1rem; border-radius: 999px; 
+        font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 6px;
+    }
+    
+    /* STATS */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+    .stat-card {
+        background: white; padding: 1.5rem; border-radius: 12px; display: flex; align-items: center; gap: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+    }
+    .border-amber { border-left: 4px solid #f59e0b; }
+    .border-blue { border-left: 4px solid #3b82f6; }
+    .border-emerald { border-left: 4px solid #064e3b; }
+    
+    .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+    .amber-bg { background: #fef3c7; color: #d97706; }
+    .blue-bg { background: #dbeafe; color: #2563eb; }
+    .emerald-bg { background: #ecfdf5; color: #064e3b; }
+    
+    .stat-num { font-size: 1.75rem; font-weight: 800; display: block; line-height: 1; color: #0f172a; }
+    .stat-label { font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    /* TABLE */
+    .table-section { background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; }
+    .table-header { padding: 1.5rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .section-title { font-size: 1.25rem; font-weight: 700; color: #064e3b; margin: 0; }
+    
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th { 
+        background: #f8fafc; color: #64748b; text-align: left; padding: 1rem 1.5rem; 
+        font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;
+    }
+    .data-table td { padding: 1rem 1.5rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.9rem; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: #f8fafc; }
+    
+    /* STATUS BADGES */
+    .status-badge { padding: 4px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .status-pending { background: #fef3c7; color: #92400e; }
+    .status-in-progress { background: #dbeafe; color: #1e40af; }
+    .status-resolved { background: #ecfdf5; color: #065f46; }
+    
+    /* SELECT DROPDOWN IN TABLE */
+    .status-select {
+        padding: 0.4rem 0.8rem; border-radius: 6px; border: 1px solid #cbd5e1;
+        font-size: 0.85rem; background: white; cursor: pointer;
+    }
+    .status-select:focus { outline: none; border-color: #064e3b; }
+    
+    .btn-emerald-sm {
+        background: #064e3b; color: white; border: none; padding: 0.5rem 1rem;
+        border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;
+    }
+    .btn-emerald-sm:hover { background: #047857; }
+    
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+        .sidebar { width: 80px; padding: 1.5rem 0.5rem; align-items: center; }
+        .sidebar-brand span, .nav-item span, .sidebar-footer { display: none; }
+        .nav-item { justify-content: center; padding: 1rem; }
+        .main-area { margin-left: 80px; padding: 1.5rem; }
+    }
+    @media (max-width: 768px) {
+        .sidebar { display: none; }
+        .main-area { margin-left: 0; }
+        .top-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        .stats-grid { grid-template-columns: 1fr; }
+        .table-container { overflow-x: auto; }
+    }
+</style>
+{% endblock %}

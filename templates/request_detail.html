@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Request #{{ req.id }} - Murang'a County{% endblock %}
+
+{% block content %}
+<div class="auth-container animate-fade-in">
+    <div class="auth-card" style="max-width: 700px;">
+        <div class="auth-header">
+            <h2>Request Details #{{ req.id }}</h2>
+            <p>Submitted on {{ req.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+        </div>
+
+        <!-- STATUS TIMELINE -->
+        <div style="display:flex; justify-content:space-between; margin-bottom:2rem; padding:1rem; background:#f8fafc; border-radius:12px;">
+            <div style="text-align:center; flex:1; opacity:{% if req.status != 'Pending' %}0.4{% else %}1{% endif %};">
+                <i class="fas fa-clock" style="font-size:1.5rem; color:#f59e0b;"></i>
+                <p style="font-size:0.75rem; font-weight:700; margin-top:0.5rem;">PENDING</p>
+            </div>
+            <div style="text-align:center; flex:1; opacity:{% if req.status == 'Resolved' %}1{% else %}0.4{% endif %};">
+                <i class="fas fa-spinner" style="font-size:1.5rem; color:#3b82f6;"></i>
+                <p style="font-size:0.75rem; font-weight:700; margin-top:0.5rem;">IN PROGRESS</p>
+            </div>
+            <div style="text-align:center; flex:1; opacity:{% if req.status == 'Resolved' %}1{% else %}0.4{% endif %};">
+                <i class="fas fa-check-circle" style="font-size:1.5rem; color:#064e3b;"></i>
+                <p style="font-size:0.75rem; font-weight:700; margin-top:0.5rem;">RESOLVED</p>
+            </div>
+        </div>
+
+        <!-- DETAILS GRID -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+            <div>
+                <label>CATEGORY</label>
+                <p style="font-weight:600; color:#064e3b;">{{ req.category }}</p>
+            </div>
+            <div>
+                <label>LOCATION</label>
+                <p style="font-weight:600; color:#064e3b;">{{ req.location }}</p>
+            </div>
+        </div>
+
+        <div style="margin-bottom:1.5rem;">
+            <label>DESCRIPTION</label>
+            <p style="line-height:1.6; color:#334155; background:#f8fafc; padding:1rem; border-radius:8px;">{{ req.description }}</p>
+        </div>
+
+        {% if req.image_url %}
+        <div style="margin-bottom:1.5rem;">
+            <label>EVIDENCE PHOTO</label>
+            <img src="{{ url_for('uploaded_file', filename=req.image_url.split('/')[-1]) }}" 
+                 style="width:100%; max-height:300px; object-fit:cover; border-radius:8px; margin-top:0.5rem; border:1px solid #e2e8f0;">
+        </div>
+        {% endif %}
+
+        {% if req.admin_notes %}
+        <div style="background:#ecfdf5; padding:1rem; border-radius:8px; border-left:4px solid #064e3b;">
+            <label style="color:#064e3b;">ADMIN NOTES</label>
+            <p style="color:#064e3b; margin-top:0.5rem;">{{ req.admin_notes }}</p>
+        </div>
+        {% endif %}
+
+        <div class="auth-footer" style="border-top:none; padding-top:1rem;">
+            <a href="/dashboard" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<!-- REUSE AUTH STYLES FROM PROFILE.HTML HERE -->
+<style>
+    /* PASTE THE EXACT SAME <style> BLOCK FROM profile.html HERE */
+</style>
+{% endblock %}
