@@ -5,7 +5,7 @@ A Flask-based web application for managing citizen service requests. Built as pa
 **Tech Stack**
 1. Backend: Python 3.10+, Flask 3.0, SQLAlchemy ORM
 2. Frontend: HTML5, CSS3, Vanilla JavaScript, Jinja2 Templating
-3. Database: SQLite (dev), PostgreSQL-ready schema
+3. Database: SQLite (dev)
 4. Deployment: Gunicorn WSGI server, Pythonanywhere.com
 
 **Core Features**
