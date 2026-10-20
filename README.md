@@ -48,10 +48,9 @@ Access at http://127.0.0.1:8000
 5. File upload validation prevents malicious script execution
 
 ## Known Limitations & Future Work
-1. Image persistence: Free-tier Render deletes uploads on redeploy. Production fix: integrate Cloudinary/S3.
-2. SMS notifications: Planned integration with Africa's Talking API for real-time status alerts.
-3. GIS mapping: Next phase will add Leaflet.js to visualize infrastructure hotspots by ward.
-4. Multi-language support: Swahili/Kikuyu toggle for rural accessibility.
+1. SMS notifications: Planned integration with Africa's Talking API for real-time status alerts.
+2. GIS mapping: Next phase will add Leaflet.js to visualize infrastructure hotspots by ward.
+3. Multi-language support: Swahili/Kikuyu toggle for rural accessibility.
 
 
 ## Author
