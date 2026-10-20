@@ -6,7 +6,7 @@ A Flask-based web application for managing citizen service requests. Built as pa
 1. Backend: Python 3.10+, Flask 3.0, SQLAlchemy ORM
 2. Frontend: HTML5, CSS3, Vanilla JavaScript, Jinja2 Templating
 3. Database: SQLite (dev), PostgreSQL-ready schema
-4. Deployment: Gunicorn WSGI server, Render.com
+4. Deployment: Gunicorn WSGI server, Pythonanywhere.com
 
 **Core Features**
 1. Role-based access control: Separate dashboards for citizens and county admins
