@@ -45,7 +45,7 @@ Access at http://127.0.0.1:8000
 2. SQL injection prevented through SQLAlchemy parameterized queries
 3. XSS protection via Jinja2 auto-escaping
 4. Session signing with cryptographically random secret key
-5.File upload validation prevents malicious script execution
+5. File upload validation prevents malicious script execution
 
 ## Known Limitations & Future Work
 1. Image persistence: Free-tier Render deletes uploads on redeploy. Production fix: integrate Cloudinary/S3.
