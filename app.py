@@ -11,7 +11,11 @@ app.secret_key = secrets.token_urlsafe(32)
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 # --- CONFIGURATION ---
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///muranga_services.db'
+# Ensure instance folder exists for SQLite (critical for Render/Cloud)
+instance_path = os.path.join(basedir, 'instance')
+os.makedirs(instance_path, exist_ok=True)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(instance_path, "muranga_services.db")}'
 app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB Max Upload
 
@@ -19,6 +23,12 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 db = SQLAlchemy(app)
+
+# --- DATABASE INITIALIZATION (MOVED OUTSIDE __MAIN__) ---
+# This ensures tables are created whether running locally or on Render/Gunicorn
+with app.app_context():
+    db.create_all()
+    print("✅ Database tables initialized successfully")
 
 # --- HELPER FUNCTIONS ---
 def allowed_file(filename):
@@ -261,22 +271,7 @@ def export_csv():
         download_name=filename
     )
 
-# --- DATABASE INITIALIZATION ---
+# --- LOCAL DEVELOPMENT ONLY ---
 if __name__ == '__main__':
-    with app.app_context():
-        print("🔍 Checking database integrity...")
-        db.create_all()
-        inspector = db.inspect(db.engine)
-        tables = inspector.get_table_names()
-        print(f"✅ Tables found: {tables}")
-        
-        if 'user' in tables:
-            columns = [col['name'] for col in inspector.get_columns('user')]
-            print(f"📋 User columns: {columns}")
-            if 'phone' not in columns:
-                print("⚠️ WARNING: 'phone' column missing. Delete DB and restart.")
-            else:
-                print("✅ Database schema is valid!")
-    
-    print("\n🚀 Starting Murang'a Service Portal on http://127.0.0.1:8000")
+    print("\n Starting Murang'a Service Portal on http://127.0.0.1:8000")
     app.run(debug=True, port=8000)
